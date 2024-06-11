@@ -10,14 +10,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	// h2 DB 사용을 위한 접근 권한 활성화
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable()) // H2 콘솔 사용을 위해 CSRF 보호 비활성화
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers("/h2-console/**").permitAll().anyRequest()
-						.authenticated())
-				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
+    // h2 DB 사용을 위한 접근 권한 활성화
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable()) // H2 콘솔 사용을 위해 CSRF 보호 비활성화
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 접근 허용
+                        .requestMatchers("/swagger-ui/**").permitAll() // Swagger UI 접근 허용
+                        .requestMatchers("/swagger-ui.html").permitAll() // Swagger UI 접근 허용
+                        .requestMatchers("/v3/api-docs/**").permitAll() // OpenAPI docs 접근 허용
+                        .anyRequest().authenticated())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())); // H2 콘솔 접근 허용
 
-		return http.build();
-	}
+        return http.build();
+    }
 }
