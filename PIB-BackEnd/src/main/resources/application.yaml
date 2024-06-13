@@ -20,6 +20,9 @@ spring:
     username: sa
     password:
 
+  config:
+    import: classpath:application-secret.yaml
+
 logging:
   level:
     sql: info
