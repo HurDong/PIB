@@ -37,20 +37,17 @@ public class OpenAiController {
 
 	private final OpenAiService openAiService;
 
-	@Value("${open-ai-key}")
-	String openAiKey;
-
-	@GetMapping("/test")
-	public ResponseEntity<?> test() {
-		System.out.println(openAiKey);
-		return ResponseEntity.status(HttpStatus.OK).build();
-	}
-
 	@PostMapping("/prompt")
 	public ResponseEntity<String> chat(@RequestBody Map<String, String> request) {
 		String userInput = request.get("input");
 		logger.info("유저 입력 : {}", userInput);
 		String response = openAiService.submitPrompt(userInput);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/modelList")
+	public ResponseEntity<List<Map<String, Object>>> selectModelList() {
+		List<Map<String, Object>> response = openAiService.vieModelList();
 		return ResponseEntity.ok(response);
 	}
 
