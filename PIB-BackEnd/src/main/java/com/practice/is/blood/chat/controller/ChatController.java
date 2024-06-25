@@ -10,16 +10,16 @@ import com.practice.is.blood.chat.domain.ChatMessage;
 @Controller
 public class ChatController {
 
-	@MessageMapping("/chat.sendMessage")
-	@SendTo("/topic/public")
-	public ChatMessage sendMessage(ChatMessage chatMessage) {
-		return chatMessage;
-	}
-
-	@MessageMapping("/chat.addUser")
-	@SendTo("/topic/public")
-	public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-		return chatMessage;
-	}
+//	@MessageMapping("/chat.sendMessage")
+//	@SendTo("/topic/public")
+//	public ChatMessage sendMessage(ChatMessage chatMessage) {
+//		return chatMessage;
+//	}
+//
+//	@MessageMapping("/chat.addUser")
+//	@SendTo("/topic/public")
+//	public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+//		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+//		return chatMessage;
+//	}
 }
