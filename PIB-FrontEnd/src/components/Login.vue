@@ -2,7 +2,8 @@
   <div class="login">
     <h1>Enter Chat Room</h1>
     <input v-model="username" placeholder="Enter your nickname" />
-    <button @click="enterChatRoom">Join</button>
+    <button @click="enterChatRoom">Join Text Chat</button>
+    <button @click="enterVideoChatRoom">Join Video Chat</button>
   </div>
 </template>
 
@@ -18,6 +19,14 @@ export default {
       if (this.username.trim()) {
         this.$router.push({
           name: "ChatRoom",
+          params: { username: this.username },
+        });
+      }
+    },
+    enterVideoChatRoom() {
+      if (this.username.trim()) {
+        this.$router.push({
+          name: "VideoChat",
           params: { username: this.username },
         });
       }
@@ -39,5 +48,6 @@ input {
 }
 button {
   padding: 10px 20px;
+  margin: 5px;
 }
 </style>
