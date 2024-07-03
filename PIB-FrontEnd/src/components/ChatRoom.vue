@@ -68,6 +68,7 @@ export default {
           timestamp: new Date().toISOString(),
         };
         this.ws.send(JSON.stringify(message));
+        this.messages.push(message);  // 자기가 보낸 메세지 확인을 위한 코드
         this.newMessage = "";
       }
     },
