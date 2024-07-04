@@ -30,7 +30,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 	// 크롤링을 위한 의존성
 	implementation 'org.jsoup:jsoup:1.17.2'
-	implementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
+	implementation 'org.seleniumhq.selenium:selenium-java:4.22.0'
 
 	// 웹소켓 통신을 위한 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.1'
