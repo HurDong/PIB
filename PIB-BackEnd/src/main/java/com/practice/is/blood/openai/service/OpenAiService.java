@@ -31,15 +31,15 @@ public class OpenAiService {
 		logger.debug("[+] 모델 리스트를 조회합니다.");
 		List<Map<String, Object>> resultList = null;
 
-		// [STEP1] 토큰 정보가 포함된 Header를 가져옵니다.
+		// Header 가져오기
 		HttpHeaders headers = openAiConfig.httpHeaders();
 
-		// [STEP2] 통신을 위한 RestTemplate을 구성합니다.
+		// RestTemplate -> rest api 호출
 		ResponseEntity<String> response = openAiConfig.restTemplate().exchange("https://api.openai.com/v1/models",
 				HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
 		try {
-			// [STEP3] Jackson을 기반으로 응답값을 가져옵니다.
+			// Jackson 기반으로 Response 가져오기
 			ObjectMapper om = new ObjectMapper();
 			Map<String, Object> responseData = om.readValue(response.getBody(),
 					new TypeReference<Map<String, Object>>() {
@@ -53,8 +53,4 @@ public class OpenAiService {
 		return resultList;
 	}
 
-	public String submitPrompt(String userInput) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
