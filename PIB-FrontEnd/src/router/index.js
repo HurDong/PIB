@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "../components/Login.vue";
 import ChatRoom from "../components/ChatRoom.vue";
-import VideoChat from "../components/VideoChat.vue"; // 새로 추가된 화상 채팅 컴포넌트
+import VideoChat from "../components/VideoChat.vue";
+import WebEditor from "../components/WebEditor.vue"; // 새로 추가된 Web Editor 컴포넌트
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: "/videochat/:username",
     name: "VideoChat",
     component: VideoChat,
+  },
+  {
+    path: "/editor",  // 새로운 Web Editor 경로 추가
+    name: "WebEditor",
+    component: WebEditor,
   },
 ];
 
