@@ -63,6 +63,11 @@ export default {
       }
     },
     async startCall() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Your browser does not support WebRTC.");
+        return;
+      }
+
       this.peerConnection = new RTCPeerConnection(this.configuration);
       this.peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
@@ -94,10 +99,15 @@ export default {
           })
         );
       } catch (error) {
-        console.error("Error accessing media devices.", error);
+        this.handleMediaError(error);
       }
     },
     async handleOffer(data) {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Your browser does not support WebRTC.");
+        return;
+      }
+
       if (!this.peerConnection) {
         this.peerConnection = new RTCPeerConnection(this.configuration);
         this.peerConnection.onicecandidate = (event) => {
@@ -115,22 +125,26 @@ export default {
       await this.peerConnection.setRemoteDescription(
         new RTCSessionDescription(data.sdp)
       );
-      this.localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      document.getElementById("localVideo").srcObject = this.localStream;
-      this.localStream.getTracks().forEach((track) => {
-        this.peerConnection.addTrack(track, this.localStream);
-      });
-      const answer = await this.peerConnection.createAnswer();
-      await this.peerConnection.setLocalDescription(answer);
-      this.ws.send(
-        JSON.stringify({
-          type: "answer",
-          sdp: this.peerConnection.localDescription,
-        })
-      );
+      try {
+        this.localStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        document.getElementById("localVideo").srcObject = this.localStream;
+        this.localStream.getTracks().forEach((track) => {
+          this.peerConnection.addTrack(track, this.localStream);
+        });
+        const answer = await this.peerConnection.createAnswer();
+        await this.peerConnection.setLocalDescription(answer);
+        this.ws.send(
+          JSON.stringify({
+            type: "answer",
+            sdp: this.peerConnection.localDescription,
+          })
+        );
+      } catch (error) {
+        this.handleMediaError(error);
+      }
     },
     async handleAnswer(data) {
       await this.peerConnection.setRemoteDescription(
@@ -142,6 +156,17 @@ export default {
         await this.peerConnection.addIceCandidate(
           new RTCIceCandidate(data.candidate)
         );
+      }
+    },
+    handleMediaError(error) {
+      if (error.name === "NotAllowedError") {
+        alert("Permissions have not been granted to use your camera and microphone.");
+      } else if (error.name === "NotFoundError") {
+        alert("No media tracks of the type specified were found.");
+      } else if (error.name === "NotReadableError") {
+        alert("Could not start media capture due to a hardware error.");
+      } else {
+        alert("An unknown error occurred while accessing media devices: " + error.message);
       }
     },
     leaveChat() {
