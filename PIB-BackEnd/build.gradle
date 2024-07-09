@@ -34,7 +34,10 @@ dependencies {
 
 	// 웹소켓 통신을 위한 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.1'
-
+	
+	// UUID 연습을 위한 의존성
+	implementation 'com.github.f4b6a3:ulid-creator:5.2.3'
+	
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
