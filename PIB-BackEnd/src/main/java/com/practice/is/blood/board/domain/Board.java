@@ -28,6 +28,10 @@ public class Board {
 	@Column(columnDefinition = "int default 0")
 	private int likes;
 
-	public Board(int memberId2, String title2, String content2, String type2) {
+	public Board(int memberId, String title, String content, String type) {
+		this.memberId = memberId;
+		this.title = title;
+		this.content = content;
+		this.type = type;
 	}
 }
