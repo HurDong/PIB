@@ -53,4 +53,9 @@ public class OpenAiService {
 		return resultList;
 	}
 
+	public String submitPrompt(String userInput) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
