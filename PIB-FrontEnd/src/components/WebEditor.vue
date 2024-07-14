@@ -1,64 +1,48 @@
 <template>
-  <div id="editor-container">
-    <select v-model="selectedLanguage" @change="changeLanguage">
-      <option v-for="lang in languages" :key="lang" :value="lang">{{ lang }}</option>
-    </select>
-    <div id="editor" style="height: 90vh;"></div>
-  </div>
+  <div id="editor" style="width: 100%; height: 100vh"></div>
 </template>
 
 <script>
-import * as monaco from 'monaco-editor';
+import * as monaco from "monaco-editor";
 
 export default {
-  name: 'WebEditor',
-  data() {
-    return {
-      editor: null,
-      selectedLanguage: 'javascript',
-      languages: ['javascript', 'python', 'java', 'csharp']
-    };
-  },
+  name: "CodeEditor",
   mounted() {
-    this.initializeEditor(this.selectedLanguage);
+    this.editor = monaco.editor.create(document.getElementById("editor"), {
+      value: 'function x() {\n\tconsole.log("Hello world!");\n}',
+      language: "javascript",
+    });
+
+    // WebSocket 설정
+    this.socket = new WebSocket("ws://localhost:8080/ws");
+
+    this.socket.onopen = () => {
+      console.log("WebSocket connection established");
+    };
+
+    this.socket.onmessage = (event) => {
+      let data = JSON.parse(event.data);
+      this.editor.setValue(data.content);
+    };
+
+    this.socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    this.socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    // 에디터 내용 변경 시 WebSocket 메시지 전송
+    this.editor.onDidChangeModelContent(() => {
+      let content = this.editor.getValue();
+      this.socket.send(JSON.stringify({ content: content }));
+    });
   },
-  beforeDestroy() {
-    if (this.editor) {
-      this.editor.dispose();
-    }
-  },
-  methods: {
-    initializeEditor(language) {
-      this.editor = monaco.editor.create(document.getElementById('editor'), {
-        value: this.getInitialCode(language),
-        language: language
-      });
-    },
-    getInitialCode(language) {
-      switch (language) {
-        case 'javascript':
-          return '// JavaScript code here...';
-        case 'python':
-          return '# Python code here...';
-        case 'java':
-          return 'public class Main { public static void main(String[] args) { System.out.println("Hello, World!"); } }';
-        case 'csharp':
-          return 'using System; namespace HelloWorld { class Program { static void Main(string[] args) { Console.WriteLine("Hello, World!"); } } }';
-        default:
-          return '';
-      }
-    },
-    changeLanguage() {
-      const currentValue = this.editor.getValue();
-      monaco.editor.setModelLanguage(this.editor.getModel(), this.selectedLanguage);
-      this.editor.setValue(this.getInitialCode(this.selectedLanguage));
-      this.editor.setValue(currentValue);
-    }
-  }
 };
 </script>
 
-<style>
+<style scoped>
 #editor {
   border: 1px solid #ccc;
 }
