@@ -1,5 +1,8 @@
 package com.practice.is.blood.chat.handler;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -8,10 +11,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.is.blood.chat.domain.Message;
-
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {

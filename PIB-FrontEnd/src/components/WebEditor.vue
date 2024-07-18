@@ -4,40 +4,46 @@
 
 <script>
 import * as monaco from "monaco-editor";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 
 export default {
-  name: "CodeEditor",
+  name: "WebEditor",
   mounted() {
-    this.editor = monaco.editor.create(document.getElementById("editor"), {
-      value: 'function x() {\n\tconsole.log("Hello world!");\n}',
-      language: "javascript",
-    });
+    this.initializeEditor();
+    this.connectWebSocket();
+  },
+  methods: {
+    initializeEditor() {
+      this.editor = monaco.editor.create(document.getElementById("editor"), {
+        value: 'function hello() {\n\tconsole.log("Hello, world!");\n}',
+        language: "javascript",
+      });
 
-    // WebSocket 설정
-    this.socket = new WebSocket("ws://localhost:8080/ws");
-
-    this.socket.onopen = () => {
-      console.log("WebSocket connection established");
-    };
-
-    this.socket.onmessage = (event) => {
-      let data = JSON.parse(event.data);
-      this.editor.setValue(data.content);
-    };
-
-    this.socket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-
-    this.socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    // 에디터 내용 변경 시 WebSocket 메시지 전송
-    this.editor.onDidChangeModelContent(() => {
-      let content = this.editor.getValue();
-      this.socket.send(JSON.stringify({ content: content }));
-    });
+      this.editor.onDidChangeModelContent(() => {
+        const content = this.editor.getValue();
+        this.sendContent(content);
+      });
+    },
+    connectWebSocket() {
+      const socket = new SockJS("http://localhost:8080/ws");
+      this.stompClient = Stomp.over(socket);
+      this.stompClient.connect({}, () => {
+        this.stompClient.subscribe("/topic/editor", (message) => {
+          const content = JSON.parse(message.body).content;
+          this.editor.setValue(content);
+        });
+      });
+    },
+    sendContent(content) {
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.send(
+          "/app/updateContent",
+          {},
+          JSON.stringify({ content })
+        );
+      }
+    },
   },
 };
 </script>
