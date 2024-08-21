@@ -37,6 +37,10 @@ dependencies {
 	
 	// UUID 연습을 위한 의존성
 	implementation 'com.github.f4b6a3:ulid-creator:5.2.3'
+
+	// kafka 의존성
+	implementation 'org.springframework.kafka:spring-kafka:3.2.2'
+	
 	
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

@@ -1,55 +1,59 @@
 <template>
-  <div id="editor" style="width: 100%; height: 100vh"></div>
+  <div id="editor" contenteditable="true" @compositionstart="onCompositionStart" @compositionend="onCompositionEnd" @input="onInput"></div>
 </template>
 
 <script>
-import * as monaco from "monaco-editor";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 export default {
-  name: "WebEditor",
+  name: 'Editor',
+  data() {
+    return {
+      stompClient: null,
+      isComposing: false,
+    };
+  },
   mounted() {
-    this.initializeEditor();
-    this.connectWebSocket();
+    this.connect();
   },
   methods: {
-    initializeEditor() {
-      this.editor = monaco.editor.create(document.getElementById("editor"), {
-        value: 'function hello() {\n\tconsole.log("Hello, world!");\n}',
-        language: "javascript",
-      });
-
-      this.editor.onDidChangeModelContent(() => {
-        const content = this.editor.getValue();
-        this.sendContent(content);
-      });
-    },
-    connectWebSocket() {
-      const socket = new SockJS("http://localhost:8080/ws");
+    connect() {
+      const socket = new SockJS('http://localhost:8080/ws');
       this.stompClient = Stomp.over(socket);
-      this.stompClient.connect({}, () => {
-        this.stompClient.subscribe("/topic/editor", (message) => {
-          const content = JSON.parse(message.body).content;
-          this.editor.setValue(content);
+      this.stompClient.connect({}, (frame) => {
+        this.stompClient.subscribe('/topic/code', (codeMessage) => {
+          const message = JSON.parse(codeMessage.body);
+          if (!this.isComposing) {
+            document.getElementById('editor').innerText = message.content;
+          }
         });
       });
     },
-    sendContent(content) {
-      if (this.stompClient && this.stompClient.connected) {
-        this.stompClient.send(
-          "/app/updateContent",
-          {},
-          JSON.stringify({ content })
-        );
+    sendCode(content) {
+      this.stompClient.send('/app/code.edit', {}, JSON.stringify({ content, sender: 'user', type: 'edit' }));
+    },
+    onCompositionStart() {
+      this.isComposing = true;
+    },
+    onCompositionEnd() {
+      this.isComposing = false;
+      this.sendCode(document.getElementById('editor').innerText);
+    },
+    onInput() {
+      if (!this.isComposing) {
+        this.sendCode(document.getElementById('editor').innerText);
       }
     },
   },
 };
 </script>
 
-<style scoped>
+<style>
 #editor {
+  width: 80%;
+  height: 500px;
   border: 1px solid #ccc;
+  white-space: pre-wrap;
 }
 </style>

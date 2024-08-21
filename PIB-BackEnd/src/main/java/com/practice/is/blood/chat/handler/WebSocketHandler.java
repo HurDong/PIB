@@ -61,14 +61,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
 //            session.close(CloseStatus.SERVER_ERROR);
 //        }
 //    }
-	@Override
-	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		for (WebSocketSession webSocketSession : session.getOpenSessions()) {
-			if (webSocketSession.isOpen() && !session.getId().equals(webSocketSession.getId())) {
-				webSocketSession.sendMessage(message);
-			}
-		}
-	}
+//	@Override
+//	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+//		for (WebSocketSession webSocketSession : session.getOpenSessions()) {
+//			if (webSocketSession.isOpen() && !session.getId().equals(webSocketSession.getId())) {
+//				webSocketSession.sendMessage(message);
+//			}
+//		}
+//	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

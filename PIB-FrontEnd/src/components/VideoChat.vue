@@ -39,7 +39,7 @@ export default {
     this.leaveChat();
   },
   methods: {
-    async connectWebSocket() {
+    async connectWebSocket() {  
       this.ws = new WebSocket("ws://localhost:8080/ws");
       this.ws.onmessage = this.handleMessage;
       this.ws.onopen = () => {
