@@ -14,11 +14,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/kafka")
 public class KafkaController {
-
 	private final KafkaProducerService kafkaProducerService;
 
 	@PostMapping("/send/{userId}")
-	public void sendMessageToKafka(@PathVariable (name= "userId") String userId, @RequestBody String message) {
+	public void sendMessageToKafka(@PathVariable(name = "userId") String userId, @RequestBody String message) {
 		kafkaProducerService.sendMessage(userId, message);
 	}
 }

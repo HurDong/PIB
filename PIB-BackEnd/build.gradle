@@ -28,6 +28,7 @@ dependencies {
 	// implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+	
 	// 크롤링을 위한 의존성
 	implementation 'org.jsoup:jsoup:1.17.2'
 	implementation 'org.seleniumhq.selenium:selenium-java:4.22.0'
@@ -41,6 +42,11 @@ dependencies {
 	// kafka 의존성
 	implementation 'org.springframework.kafka:spring-kafka:3.2.2'
 	
+	// elastic search 의존성
+	implementation 'org.springframework.data:spring-data-elasticsearch:5.3.3'
+	
+	// elastic search rest api 의존성
+	implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.23'
 	
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
