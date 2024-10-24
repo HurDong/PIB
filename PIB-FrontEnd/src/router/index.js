@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "../components/Login.vue";
 import ChatRoom from "../components/ChatRoom.vue";
 import VideoChat from "../components/VideoChat.vue";
-import WebEditor from "../components/WebEditor.vue"; // 새로 추가된 Web Editor 컴포넌트
+import WebEditor from "../components/WebEditor.vue";
+import SseMessage from "../components/SseMessage.vue"; // 새로 추가된 SSE 메시지 컴포넌트
 
 const routes = [
   {
@@ -21,9 +22,14 @@ const routes = [
     component: VideoChat,
   },
   {
-    path: "/editor",  // 새로운 Web Editor 경로 추가
+    path: "/editor",
     name: "WebEditor",
     component: WebEditor,
+  },
+  {
+    path: "/sse-message",  // 새로운 SSE 메시지 경로 추가
+    name: "SseMessage",
+    component: SseMessage,
   },
 ];
 
