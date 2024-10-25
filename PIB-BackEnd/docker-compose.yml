@@ -16,11 +16,13 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m  # 메모리 제한 설정
+      - xpack.security.enabled=false   # 보안을 비활성화하여 HTTP로 접근 가능하도록 설정
     ports:
       - "9200:9200"
 
@@ -30,6 +32,10 @@ services:
       - "5601:5601"
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    depends_on:
+      - elasticsearch
 
   mattermost:
     image: mattermost/mattermost-preview
@@ -45,3 +51,16 @@ services:
       MYSQL_DATABASE: mydatabase
     ports:
       - "3306:3306"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.5.1
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf  # logstash.conf 파일을 컨테이너에 매핑
+      - ./mysql-connector-java.jar:/usr/share/logstash/mysql-connector-java.jar  # JDBC 드라이버를 컨테이너에 매핑
+    environment:
+      LOGSTASH_JDBC_DRIVER_LIBRARY: "/usr/share/logstash/mysql-connector-java.jar"
+    depends_on:
+      - mysql
+      - elasticsearch
+    ports:
+      - "5044:5044"
