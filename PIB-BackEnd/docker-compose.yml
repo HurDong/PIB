@@ -52,15 +52,15 @@ services:
     ports:
       - "3306:3306"
 
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.5.1
-    volumes:
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf  # logstash.conf 파일을 컨테이너에 매핑
-      - ./mysql-connector-java.jar:/usr/share/logstash/mysql-connector-java.jar  # JDBC 드라이버를 컨테이너에 매핑
-    environment:
-      LOGSTASH_JDBC_DRIVER_LIBRARY: "/usr/share/logstash/mysql-connector-java.jar"
-    depends_on:
-      - mysql
-      - elasticsearch
-    ports:
-      - "5044:5044"
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:8.5.1
+#    volumes:
+#      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf  # logstash.conf 파일을 컨테이너에 매핑
+#      - ./mysql-connector-java.jar:/usr/share/logstash/mysql-connector-java.jar  # JDBC 드라이버를 컨테이너에 매핑
+#    environment:
+#      LOGSTASH_JDBC_DRIVER_LIBRARY: "/usr/share/logstash/mysql-connector-java.jar"
+#    depends_on:
+#      - mysql
+#      - elasticsearch
+#    ports:
+#      - "5044:5044"
